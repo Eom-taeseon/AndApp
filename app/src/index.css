@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* ───────── 폰슐랭 디자인 토큰 ───────── */
+:root {
+  --primary: #FF6B35;
+  --primary-light: #FF8F5E;
+  --bg: #FFF5EF;
+  --card: #FFFFFF;
+  --text: #1E1E1E;
+  --sub: #999999;
+  --border: #F0E8E3;
+  --yellow: #FFD166;
+  --purple: #6C63FF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+}
+
+a, button {
+  transition: all 0.15s ease;
+}

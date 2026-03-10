@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>폰슐랭 — UI 프로토타입 v0.1</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #FF6B35;
+      --primary-light: #FF8F5E;
+      --bg: #FFF5EF;
+      --card: #FFFFFF;
+      --text: #1E1E1E;
+      --sub: #999;
+      --border: #F0E8E3;
+      --yellow: #FFD166;
+      --purple: #6C63FF;
+    }
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: linear-gradient(145deg, #1a0a05 0%, #3d1a0b 50%, #1a0a05 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      gap: 16px;
+    }
+
+    /* Prototype label */
+    .proto-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .proto-dot { width:6px; height:6px; border-radius:50%; background:#FF6B35; animation: blink 1.5s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Screen selector buttons */
+    .screen-selector {
+      display: flex; gap: 8px;
+    }
+    .sel-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.2);
+      background: transparent; color: rgba(255,255,255,0.5); font-size: 12px;
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .sel-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* PHONE FRAME */
+    .phone {
+      width: 390px;
+      height: 820px;
+      background: var(--bg);
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 0 0 2px #0d0403, 0 0 0 9px #2a0e06, 0 40px 100px rgba(0,0,0,0.6);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Status bar */
+    .statusbar {
+      height: 44px; background: white;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; flex-shrink: 0;
+    }
+    .statusbar-time { font-size: 15px; font-weight: 700; }
+    .statusbar-icons { display: flex; gap: 5px; align-items: center; font-size: 12px; }
+
+    /* Screen container */
+    .screens { flex: 1; position: relative; overflow: hidden; }
+    .screen {
+      position: absolute; inset: 0;
+      overflow-y: auto; overflow-x: hidden;
+      background: var(--bg);
+      transform: translateX(100%);
+      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.active { transform: translateX(0); z-index: 10; }
+    .screen.behind { transform: translateX(-30%); }
+
+    /* Bottom Nav */
+    .bottomnav {
+      height: 76px; background: white;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-around;
+      padding: 0 8px 8px; flex-shrink: 0;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; padding: 6px 12px; border: none; background: none;
+      color: #ccc; font-size: 10px; font-family: inherit;
+      transition: color 0.2s;
+    }
+    .nav-item.on { color: var(--primary); }
+    .nav-item svg { width: 22px; height: 22px; }
+    .nav-plus {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: none;
+      box-shadow: 0 4px 16px rgba(255,107,53,0.45);
+      transition: transform 0.15s;
+    }
+    .nav-plus:hover { transform: scale(1.08); }
+    .nav-plus svg { width: 26px; height: 26px; }
+
+    /* ───────────── HOME SCREEN ───────────── */
+    .appbar {
+      position: sticky; top: 0; z-index: 20;
+      background: white; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 21px; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
+    .logo span { color: var(--text); }
+    .appbar-icons { display: flex; gap: 14px; }
+    .appbar-icons svg { width: 21px; height: 21px; cursor: pointer; color: var(--text); }
+
+    .chips-scroll {
+      background: white; padding: 10px 16px;
+      display: flex; gap: 7px; overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+    }
+    .chips-scroll::-webkit-scrollbar { display: none; }
+    .chip {
+      padding: 5px 13px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      white-space: nowrap; cursor: pointer; border: 1.5px solid var(--border);
+      background: white; color: var(--sub); transition: all 0.15s; font-family: inherit;
+    }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: white; }
+
+    .feed { padding: 14px 14px; display: flex; flex-direction: column; gap: 12px; }
+
+    /* Review Card */
+    .rcard {
+      background: white; border-radius: 18px;
+      overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .rcard:active { transform: scale(0.985); }
+    .rcard-img {
+      height: 175px; position: relative;
+      display: flex; align-items: center; justify-content: center; font-size: 52px;
+    }
+    .rcard-badge {
+      position: absolute; top: 11px; right: 11px;
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(4px);
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 13px; font-weight: 800; color: var(--primary);
+    }
+    .rcard-body { padding: 13px 15px 15px; }
+    .rcard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .rcard-name { font-size: 16px; font-weight: 800; color: var(--text); }
+    .catbadge {
+      font-size: 11px; font-weight: 600; color: white;
+      padding: 2px 8px; border-radius: 8px; background: var(--primary);
+    }
+    .rcard-addr { font-size: 12px; color: var(--sub); margin-bottom: 8px; }
+    .rcard-text {
+      font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 11px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .score-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+    .spill {
+      display: flex; align-items: center; gap: 2px;
+      font-size: 11px; padding: 3px 7px; border-radius: 7px;
+      background: #FFF5F0; color: var(--sub);
+    }
+    .spill b { color: var(--primary); font-weight: 700; }
+    .rcard-footer {
+      display: flex; align-items: center; gap: 8px;
+      padding-top: 11px; margin-top: 11px; border-top: 1px solid var(--border);
+    }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 11px; font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--yellow));
+    }
+    .rcard-uname { font-size: 12px; font-weight: 600; }
+    .rcard-date { font-size: 11px; color: var(--sub); margin-left: auto; }
+
+    /* ───────────── DETAIL SCREEN ───────────── */
+    .dheader {
+      position: sticky; top: 0; z-index: 20;
+      background: white; padding: 14px 18px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .backbtn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; padding: 3px;
+    }
+    .backbtn svg { width: 22px; height: 22px; }
+    .dheader-title { font-size: 16px; font-weight: 700; flex: 1; }
+
+    .dhero {
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      font-size: 60px; position: relative;
+    }
+    .dinfo { background: white; padding: 18px 20px; }
+    .dname { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+    .drow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .daddr { font-size: 13px; color: var(--sub); }
+    .dscore-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 0; border-top: 1px solid var(--border);
+    }
+    .dscore-big { font-size: 44px; font-weight: 900; color: var(--primary); line-height: 1; }
+    .dstars { font-size: 17px; }
+    .drev-count { font-size: 12px; color: var(--sub); margin-top: 3px; }
+
+    .dsection { background: white; margin-top: 8px; padding: 18px 20px; }
+    .dsection-title { font-size: 15px; font-weight: 800; margin-bottom: 14px; }
+
+    .barrow { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .barlabel { width: 58px; font-size: 12px; color: var(--sub); display: flex; align-items: center; gap: 3px; }
+    .bartrack { flex: 1; height: 8px; background: #f0e8e3; border-radius: 4px; overflow: hidden; }
+    .barfill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      transition: width 0.8s ease;
+    }
+    .barval { width: 28px; font-size: 13px; font-weight: 700; color: var(--primary); text-align: right; }
+
+    .radar-wrap { display: flex; justify-content: center; padding: 6px 0; }
+
+    .mapbox {
+      height: 150px; border-radius: 14px;
+      background: linear-gradient(135deg, #e8f5eb, #d0ebd5);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; color: #4a8c5a; font-size: 13px;
+    }
+
+    .drev-item { padding: 15px 0; border-bottom: 1px solid var(--border); }
+    .drev-item:last-child { border-bottom: none; }
+    .drev-top { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+    .drev-score { font-size: 13px; font-weight: 700; color: var(--primary); }
+    .drev-date { font-size: 11px; color: var(--sub); margin-left: auto; }
+    .drev-text { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 8px; }
+
+    /* ───────────── WRITE SCREEN ───────────── */
+    .wheader {
+      background: white; padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .wheader-title { font-size: 16px; font-weight: 700; }
+
+    .wform { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .wcard { background: white; border-radius: 16px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .wlabel {
+      font-size: 11px; font-weight: 700; color: var(--sub);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+    }
+
+    .rest-box {
+      display: flex; align-items: center; gap: 11px;
+      background: #FFF5EF; border-radius: 12px; padding: 12px 13px;
+      border: 1.5px solid var(--primary);
+    }
+    .rest-name { font-size: 15px; font-weight: 700; }
+    .rest-addr { font-size: 12px; color: var(--sub); margin-top: 2px; }
+
+    .daterow {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg); border-radius: 12px; padding: 12px 13px;
+      border: 1.5px solid var(--border); font-size: 14px; color: var(--text);
+    }
+
+    .scrow {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
+    }
+    .scrow:last-child { border-bottom: none; }
+    .scicon { font-size: 16px; width: 22px; text-align: center; }
+    .scname { width: 60px; font-size: 13px; font-weight: 500; color: var(--text); }
+    .stars { display: flex; gap: 3px; flex: 1; }
+    .star {
+      font-size: 24px; cursor: pointer; color: #e0d8d3;
+      transition: color 0.1s, transform 0.1s; user-select: none; line-height: 1;
+    }
+    .star.lit { color: var(--yellow); }
+    .star:hover { transform: scale(1.15); }
+    .scnum { width: 26px; font-size: 13px; font-weight: 700; color: var(--primary); text-align: right; }
+
+    .radar-preview { background: #FFF5EF; border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
+
+    .rtextarea {
+      width: 100%; min-height: 96px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 11px 13px; font-size: 14px; font-family: inherit;
+      resize: none; outline: none; line-height: 1.6; color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .rtextarea:focus { border-color: var(--primary); }
+
+    .photorow { display: flex; gap: 9px; overflow-x: auto; }
+    .photorow::-webkit-scrollbar { display: none; }
+    .photoslot {
+      width: 78px; height: 78px; border-radius: 12px; flex-shrink: 0;
+      border: 2px dashed var(--border); display: flex; align-items: center;
+      justify-content: center; cursor: pointer; font-size: 22px; color: var(--sub);
+      transition: border-color 0.2s;
+    }
+    .photoslot:hover { border-color: var(--primary); }
+
+    .submitbtn {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white; border: none; border-radius: 16px; font-size: 16px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-bottom: 16px;
+    }
+    .submitbtn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(255,107,53,0.45); }
+
+    /* ───────────── SEARCH SCREEN ───────────── */
+    .sheader {
+      background: white; padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .searchbar {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg); border-radius: 14px; padding: 11px 14px;
+      border: 1.5px solid var(--border);
+    }
+    .searchbar input {
+      flex: 1; border: none; background: none; font-size: 15px;
+      font-family: inherit; outline: none; color: var(--text);
+    }
+    .searchbar svg { width: 18px; height: 18px; color: var(--sub); flex-shrink: 0; }
+
+    .filter-row {
+      padding: 12px 16px; display: flex; gap: 8px; overflow-x: auto;
+      background: white; border-bottom: 1px solid var(--border);
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .fchip {
+      display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+      border-radius: 10px; border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 600; background: white;
+      color: var(--sub); cursor: pointer; white-space: nowrap;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .fchip.on { background: #FFF5EF; border-color: var(--primary); color: var(--primary); }
+
+    .sresults { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .sitem {
+      background: white; border-radius: 14px; padding: 14px;
+      display: flex; gap: 12px; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: transform 0.12s;
+    }
+    .sitem:active { transform: scale(0.98); }
+    .sitem-emoji {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; flex-shrink: 0;
+    }
+    .sitem-info { flex: 1; }
+    .sitem-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .sitem-sub { font-size: 12px; color: var(--sub); }
+    .sitem-score { font-size: 14px; font-weight: 800; color: var(--primary); }
+
+    .section-head {
+      padding: 12px 16px 6px; font-size: 12px; font-weight: 700;
+      color: var(--sub); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ───────────── MY SCREEN ───────────── */
+    .myheader {
+      background: white; padding: 14px 20px;
+      border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 700;
+    }
+    .myprofile {
+      background: white; padding: 20px;
+      display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+    }
+    .myavatar {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--yellow));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900; color: white;
+    }
+    .myname { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .mystats { display: flex; gap: 16px; }
+    .mystat { text-align: center; }
+    .mystat-num { font-size: 18px; font-weight: 800; color: var(--primary); }
+    .mystat-label { font-size: 11px; color: var(--sub); }
+    .myrev-title { padding: 14px 18px 8px; font-size: 15px; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<div class="proto-label"><div class="proto-dot"></div> 폰슐랭 UI 프로토타입 v0.1 &nbsp;·&nbsp; 클릭해서 탐색하세요</div>
+
+<!-- Screen selector -->
+<div class="screen-selector">
+  <button class="sel-btn active" onclick="jumpTo('home',this)">🏠 홈 피드</button>
+  <button class="sel-btn" onclick="jumpTo('detail',this)">🍽️ 맛집 상세</button>
+  <button class="sel-btn" onclick="jumpTo('write',this)">✏️ 리뷰 작성</button>
+  <button class="sel-btn" onclick="jumpTo('search',this)">🔍 검색</button>
+  <button class="sel-btn" onclick="jumpTo('my',this)">👤 마이</button>
+</div>
+
+<!-- PHONE -->
+<div class="phone">
+
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span class="statusbar-time">9:41</span>
+    <div class="statusbar-icons">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M17 4h3v16h-3zM5 14h3v6H5zm6-5h3v11h-3z"/></svg>
+      <span style="font-size:11px;font-weight:600">🔋 87%</span>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="screens">
+
+    <!-- ① HOME SCREEN -->
+    <div id="screen-home" class="screen active">
+      <div class="appbar">
+        <div class="logo">🍽️ 폰슐<span>랭</span></div>
+        <div class="appbar-icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+      </div>
+      <div class="chips-scroll">
+        <button class="chip on" onclick="chipSel(this)">전체</button>
+        <button class="chip" onclick="chipSel(this)">한식</button>
+        <button class="chip" onclick="chipSel(this)">양식</button>
+        <button class="chip" onclick="chipSel(this)">카페</button>
+        <button class="chip" onclick="chipSel(this)">일식</button>
+        <button class="chip" onclick="chipSel(this)">중식</button>
+        <button class="chip" onclick="chipSel(this)">분식</button>
+      </div>
+      <div class="feed">
+
+        <!-- Card 1 -->
+        <div class="rcard" onclick="gotoDetail(0)">
+          <div class="rcard-img" style="background:linear-gradient(135deg,#fde8dc,#f5d0be)">
+            🍲<div class="rcard-badge">⭐ 4.2</div>
+          </div>
+          <div class="rcard-body">
+            <div class="rcard-top">
+              <span class="rcard-name">광화문 국밥집</span>
+              <span class="catbadge">한식</span>
+            </div>
+            <div class="rcard-addr">📍 서울 종로구 청계천로 85</div>
+            <div class="rcard-text">뚝배기에 나오는 순대국밥이 정말 진하고 맛있었어요. 가격도 착하고 아저씨도 친절하셨는데 주차가 좀 불편한게 흠이에요.</div>
+            <div class="score-pills">
+              <span class="spill">🍴 맛 <b>4.5</b></span>
+              <span class="spill">💰 가성비 <b>4.5</b></span>
+              <span class="spill">🌿 분위기 <b>3.0</b></span>
+              <span class="spill">🙏 서비스 <b>4.0</b></span>
+              <span class="spill">📸 데코 <b>3.0</b></span>
+              <span class="spill">📍 접근성 <b>2.5</b></span>
+            </div>
+            <div class="rcard-footer">
+              <div class="avatar">김</div>
+              <span class="rcard-uname">김맛탐험</span>
+              <span class="rcard-date">2주 전</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="rcard" onclick="gotoDetail(1)">
+          <div class="rcard-img" style="background:linear-gradient(135deg,#ede8ff,#d8d1ff)">
+            🍝<div class="rcard-badge">⭐ 4.7</div>
+          </div>
+          <div class="rcard-body">
+            <div class="rcard-top">
+              <span class="rcard-name">이태원 파스타 하우스</span>
+              <span class="catbadge" style="background:var(--purple)">양식</span>
+            </div>
+            <div class="rcard-addr">📍 서울 용산구 이태원로 177</div>
+            <div class="rcard-text">분위기 완전 감성 맛집! 크림파스타가 정말 진했고 플레이팅도 너무 예뻐서 사진 100장 찍었어요. 데이트 코스로 강추합니다.</div>
+            <div class="score-pills">
+              <span class="spill">🍴 맛 <b>4.5</b></span>
+              <span class="spill">💰 가성비 <b>3.5</b></span>
+              <span class="spill">🌿 분위기 <b>5.0</b></span>
+              <span class="spill">🙏 서비스 <b>4.5</b></span>
+              <span class="spill">📸 데코 <b>5.0</b></span>
+              <span class="spill">📍 접근성 <b>4.0</b></span>
+            </div>
+            <div class="rcard-footer">
+              <div class="avatar" style="background:linear-gradient(135deg,var(--purple),#9e99ff)">이</div>
+              <span class="rcard-uname">이감성미식</span>
+              <span class="rcard-date">3일 전</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="rcard" onclick="gotoDetail(2)">
+          <div class="rcard-img" style="background:linear-gradient(135deg,#e3f4fb,#bde5f5)">
+            ☕<div class="rcard-badge">⭐ 4.5</div>
+          </div>
+          <div class="rcard-body">
+            <div class="rcard-top">
+              <span class="rcard-name">연남동 블루밍 카페</span>
+              <span class="catbadge" style="background:#00BCD4">카페</span>
+            </div>
+            <div class="rcard-addr">📍 서울 마포구 연남로 27</div>
+            <div class="rcard-text">라떼 아트가 정말 예술이에요. 창가 자리가 너무 예뻐서 오래 있게 되는 카페. 주말엔 웨이팅이 있으니 참고!</div>
+            <div class="score-pills">
+              <span class="spill">🍴 맛 <b>4.0</b></span>
+              <span class="spill">💰 가성비 <b>3.5</b></span>
+              <span class="spill">🌿 분위기 <b>5.0</b></span>
+              <span class="spill">🙏 서비스 <b>4.5</b></span>
+              <span class="spill">📸 데코 <b>4.5</b></span>
+              <span class="spill">📍 접근성 <b>3.5</b></span>
+            </div>
+            <div class="rcard-footer">
+              <div class="avatar" style="background:linear-gradient(135deg,#00BCD4,#80DEEA)">박</div>
+              <span class="rcard-uname">박카페순례</span>
+              <span class="rcard-date">1일 전</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /home -->
+
+    <!-- ② DETAIL SCREEN -->
+    <div id="screen-detail" class="screen">
+      <div class="dheader">
+        <button class="backbtn" onclick="goBack('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <span class="dheader-title" id="dtitle">맛집 상세</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;cursor:pointer;margin-left:auto"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+      </div>
+      <div class="dhero" id="dhero">🍲</div>
+      <div class="dinfo">
+        <div class="dname" id="dname">광화문 국밥집</div>
+        <div class="drow">
+          <span class="catbadge" id="dcat">한식</span>
+          <span class="daddr" id="daddr">📍 서울 종로구 청계천로 85</span>
+        </div>
+        <div class="dscore-row">
+          <div class="dscore-big" id="dscore">4.2</div>
+          <div>
+            <div class="dstars" id="dstars">⭐⭐⭐⭐✩</div>
+            <div class="drev-count">리뷰 23개</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsection">
+        <div class="dsection-title">📊 항목별 평균 점수</div>
+        <div class="barrow"><div class="barlabel">🍴 맛</div><div class="bartrack"><div class="barfill" id="b-taste"></div></div><div class="barval" id="bv-taste">-</div></div>
+        <div class="barrow"><div class="barlabel">💰 가성비</div><div class="bartrack"><div class="barfill" id="b-value"></div></div><div class="barval" id="bv-value">-</div></div>
+        <div class="barrow"><div class="barlabel">🌿 분위기</div><div class="bartrack"><div class="barfill" id="b-atm"></div></div><div class="barval" id="bv-atm">-</div></div>
+        <div class="barrow"><div class="barlabel">🙏 서비스</div><div class="bartrack"><div class="barfill" id="b-svc"></div></div><div class="barval" id="bv-svc">-</div></div>
+        <div class="barrow"><div class="barlabel">📸 데코</div><div class="bartrack"><div class="barfill" id="b-deco"></div></div><div class="barval" id="bv-deco">-</div></div>
+        <div class="barrow"><div class="barlabel">📍 접근성</div><div class="bartrack"><div class="barfill" id="b-acc"></div></div><div class="barval" id="bv-acc">-</div></div>
+      </div>
+
+      <div class="dsection">
+        <div class="dsection-title">📡 6각형 맛집 프로필</div>
+        <div class="radar-wrap"><canvas id="radarDetail" width="270" height="270"></canvas></div>
+      </div>
+
+      <div class="dsection">
+        <div class="dsection-title">🗺️ 위치 (네이버 지도)</div>
+        <div class="mapbox">
+          <span style="font-size:32px">📍</span>
+          <span id="mapaddr">서울 종로구 청계천로 85</span>
+          <span style="font-size:11px;color:#888">탭하여 네이버 지도로 보기</span>
+        </div>
+      </div>
+
+      <div class="dsection">
+        <div class="dsection-title">💬 리뷰 (23)</div>
+        <div class="drev-item">
+          <div class="drev-top">
+            <div class="avatar">김</div>
+            <div>
+              <div class="rcard-uname">김맛탐험</div>
+              <div class="drev-score">⭐ 4.2</div>
+            </div>
+            <span class="drev-date">2주 전</span>
+          </div>
+          <div class="drev-text">뚝배기에 나오는 순대국밥이 정말 진하고 맛있었어요. 가격도 착하고 아저씨도 친절하셨는데 주차가 좀 불편한게 흠이에요.</div>
+          <div class="score-pills">
+            <span class="spill">🍴<b>4.5</b></span><span class="spill">💰<b>4.5</b></span>
+            <span class="spill">🌿<b>3.0</b></span><span class="spill">🙏<b>4.0</b></span>
+            <span class="spill">📸<b>3.0</b></span><span class="spill">📍<b>2.5</b></span>
+          </div>
+        </div>
+        <div class="drev-item">
+          <div class="drev-top">
+            <div class="avatar" style="background:linear-gradient(135deg,#4CAF50,#81C784)">최</div>
+            <div>
+              <div class="rcard-uname">최한식러버</div>
+              <div class="drev-score">⭐ 4.3</div>
+            </div>
+            <span class="drev-date">1개월 전</span>
+          </div>
+          <div class="drev-text">점심 혼밥으로 딱입니다. 국물이 진하고 양도 넉넉해요. 반찬도 정갈하게 나오고 혼자 와도 불편함이 없었어요.</div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div><!-- /detail -->
+
+    <!-- ③ WRITE SCREEN -->
+    <div id="screen-write" class="screen">
+      <div class="wheader">
+        <button class="backbtn" onclick="goBack('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <span class="wheader-title">리뷰 작성</span>
+        <div style="width:22px"></div>
+      </div>
+      <div class="wform">
+
+        <div class="wcard">
+          <div class="wlabel">🏠 식당 선택</div>
+          <div class="rest-box">
+            <span style="font-size:26px">🍝</span>
+            <div style="flex:1">
+              <div class="rest-name">이태원 파스타 하우스</div>
+              <div class="rest-addr">서울 용산구 이태원로 177 · 양식</div>
+            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+        </div>
+
+        <div class="wcard">
+          <div class="wlabel">📅 방문 날짜</div>
+          <div class="daterow">📅 <span>2026년 3월 7일 (토)</span></div>
+        </div>
+
+        <div class="wcard">
+          <div class="wlabel">⭐ 항목별 평가</div>
+          <div class="scrow">
+            <span class="scicon">🍴</span><span class="scname">맛</span>
+            <div class="stars" id="st-taste">
+              <span class="star" data-c="taste" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="taste" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="taste" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="taste" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="taste" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-taste">-</span>
+          </div>
+          <div class="scrow">
+            <span class="scicon">💰</span><span class="scname">가성비</span>
+            <div class="stars" id="st-value">
+              <span class="star" data-c="value" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="value" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="value" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="value" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="value" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-value">-</span>
+          </div>
+          <div class="scrow">
+            <span class="scicon">🌿</span><span class="scname">분위기</span>
+            <div class="stars" id="st-atm">
+              <span class="star" data-c="atm" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="atm" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="atm" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="atm" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="atm" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-atm">-</span>
+          </div>
+          <div class="scrow">
+            <span class="scicon">🙏</span><span class="scname">서비스</span>
+            <div class="stars" id="st-svc">
+              <span class="star" data-c="svc" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="svc" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="svc" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="svc" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="svc" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-svc">-</span>
+          </div>
+          <div class="scrow">
+            <span class="scicon">📸</span><span class="scname">데코레이션</span>
+            <div class="stars" id="st-deco">
+              <span class="star" data-c="deco" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="deco" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="deco" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="deco" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="deco" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-deco">-</span>
+          </div>
+          <div class="scrow">
+            <span class="scicon">📍</span><span class="scname">접근성</span>
+            <div class="stars" id="st-acc">
+              <span class="star" data-c="acc" data-v="1" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="acc" data-v="2" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="acc" data-v="3" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="acc" data-v="4" onclick="rateStar(this)">★</span>
+              <span class="star" data-c="acc" data-v="5" onclick="rateStar(this)">★</span>
+            </div>
+            <span class="scnum" id="sn-acc">-</span>
+          </div>
+        </div>
+
+        <div class="wcard">
+          <div class="wlabel">📡 실시간 레이더 프리뷰</div>
+          <div class="radar-preview">
+            <canvas id="radarWrite" width="230" height="230"></canvas>
+          </div>
+        </div>
+
+        <div class="wcard">
+          <div class="wlabel">✏️ 후기</div>
+          <textarea class="rtextarea" placeholder="음식, 분위기, 서비스에 대해 자유롭게 써주세요 (선택사항)"></textarea>
+        </div>
+
+        <div class="wcard">
+          <div class="wlabel">📷 사진 추가 (선택)</div>
+          <div class="photorow">
+            <div class="photoslot">＋</div>
+            <div class="photoslot" style="background:linear-gradient(135deg,#fde8dc,#f5d0be);border:none;font-size:28px">🍝</div>
+            <div class="photoslot" style="background:linear-gradient(135deg,#ede8ff,#d8d1ff);border:none;font-size:28px">🥗</div>
+          </div>
+        </div>
+
+        <button class="submitbtn" onclick="submitReview()">리뷰 등록하기 🍽️</button>
+      </div>
+    </div><!-- /write -->
+
+    <!-- ④ SEARCH SCREEN -->
+    <div id="screen-search" class="screen">
+      <div class="sheader">
+        <div class="searchbar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="맛집 이름, 주소로 검색">
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="fchip on">🍴 맛 4+</button>
+        <button class="fchip" onclick="this.classList.toggle('on')">💰 가성비 4+</button>
+        <button class="fchip" onclick="this.classList.toggle('on')">🌿 분위기 4+</button>
+        <button class="fchip" onclick="this.classList.toggle('on')">📸 데코 4+</button>
+        <button class="fchip" onclick="this.classList.toggle('on')">📍 접근성 4+</button>
+      </div>
+      <div class="section-head">인기 맛집</div>
+      <div class="sresults">
+        <div class="sitem" onclick="gotoDetail(1)">
+          <div class="sitem-emoji" style="background:linear-gradient(135deg,#ede8ff,#d8d1ff)">🍝</div>
+          <div class="sitem-info">
+            <div class="sitem-name">이태원 파스타 하우스</div>
+            <div class="sitem-sub">양식 · 서울 용산구</div>
+          </div>
+          <div class="sitem-score">⭐ 4.7</div>
+        </div>
+        <div class="sitem" onclick="gotoDetail(2)">
+          <div class="sitem-emoji" style="background:linear-gradient(135deg,#e3f4fb,#bde5f5)">☕</div>
+          <div class="sitem-info">
+            <div class="sitem-name">연남동 블루밍 카페</div>
+            <div class="sitem-sub">카페 · 서울 마포구</div>
+          </div>
+          <div class="sitem-score">⭐ 4.5</div>
+        </div>
+        <div class="sitem" onclick="gotoDetail(0)">
+          <div class="sitem-emoji" style="background:linear-gradient(135deg,#fde8dc,#f5d0be)">🍲</div>
+          <div class="sitem-info">
+            <div class="sitem-name">광화문 국밥집</div>
+            <div class="sitem-sub">한식 · 서울 종로구</div>
+          </div>
+          <div class="sitem-score">⭐ 4.2</div>
+        </div>
+        <div class="sitem">
+          <div class="sitem-emoji" style="background:linear-gradient(135deg,#e8f5eb,#d0ead5)">🍱</div>
+          <div class="sitem-info">
+            <div class="sitem-name">삼청동 오마카세</div>
+            <div class="sitem-sub">일식 · 서울 종로구</div>
+          </div>
+          <div class="sitem-score">⭐ 4.9</div>
+        </div>
+      </div>
+    </div><!-- /search -->
+
+    <!-- ⑤ MY SCREEN -->
+    <div id="screen-my" class="screen">
+      <div class="myheader">마이페이지</div>
+      <div class="myprofile">
+        <div class="myavatar">나</div>
+        <div>
+          <div class="myname">김맛탐험</div>
+          <div style="font-size:13px;color:var(--sub);margin-bottom:8px">umts2358@naver.com</div>
+          <div class="mystats">
+            <div class="mystat"><div class="mystat-num">18</div><div class="mystat-label">리뷰</div></div>
+            <div class="mystat"><div class="mystat-num">42</div><div class="mystat-label">저장</div></div>
+            <div class="mystat"><div class="mystat-num">7</div><div class="mystat-label">팔로워</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="myrev-title">📝 내가 쓴 리뷰</div>
+      <div style="padding:0 14px;display:flex;flex-direction:column;gap:10px">
+        <div class="rcard" onclick="gotoDetail(0)">
+          <div class="rcard-body">
+            <div class="rcard-top">
+              <span class="rcard-name">광화문 국밥집</span>
+              <span class="catbadge">한식</span>
+            </div>
+            <div class="rcard-addr">📍 서울 종로구 · ⭐ 4.2</div>
+            <div class="score-pills" style="margin-top:6px">
+              <span class="spill">🍴<b>4.5</b></span>
+              <span class="spill">💰<b>4.5</b></span>
+              <span class="spill">🌿<b>3.0</b></span>
+              <span class="spill">🙏<b>4.0</b></span>
+              <span class="spill">📸<b>3.0</b></span>
+              <span class="spill">📍<b>2.5</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div><!-- /my -->
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomnav">
+    <button class="nav-item on" id="ni-home" onclick="navGo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>홈
+    </button>
+    <button class="nav-item" id="ni-search" onclick="navGo('search')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>검색
+    </button>
+    <button class="nav-plus" onclick="navGo('write')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="nav-item" id="ni-map" onclick="navGo('map')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>지도
+    </button>
+    <button class="nav-item" id="ni-my" onclick="navGo('my')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>마이
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ───── DATA ─────
+const restaurants = [
+  { name:'광화문 국밥집', cat:'한식', score:'4.2', addr:'서울 종로구 청계천로 85', emoji:'🍲',
+    scores:[4.5,4.5,3.0,4.0,3.0,2.5], catColor:'var(--primary)' },
+  { name:'이태원 파스타 하우스', cat:'양식', score:'4.7', addr:'서울 용산구 이태원로 177', emoji:'🍝',
+    scores:[4.5,3.5,5.0,4.5,5.0,4.0], catColor:'var(--purple)' },
+  { name:'연남동 블루밍 카페', cat:'카페', score:'4.5', addr:'서울 마포구 연남로 27', emoji:'☕',
+    scores:[4.0,3.5,5.0,4.5,4.5,3.5], catColor:'#00BCD4' },
+];
+
+// ───── NAVIGATION ─────
+let cur = 'home', radarDetail = null, radarWrite = null;
+const CATS = ['taste','value','atm','svc','deco','acc'];
+const scores = {taste:0, value:0, atm:0, svc:0, deco:0, acc:0};
+
+function showScr(id, dir='right') {
+  const prev = document.getElementById('screen-' + cur);
+  const next = document.getElementById('screen-' + id);
+  if (!next || id === cur) return;
+  next.style.transform = dir === 'right' ? 'translateX(100%)' : 'translateX(-30%)';
+  next.classList.add('active');
+  prev.style.transform = dir === 'right' ? 'translateX(-30%)' : 'translateX(100%)';
+  setTimeout(() => {
+    prev.classList.remove('active');
+    prev.style.transform = '';
+    next.style.transform = '';
+  }, 340);
+  cur = id;
+}
+
+function navGo(tab) {
+  const dir = ['home','search','map','my'].indexOf(tab) <= ['home','search','map','my'].indexOf(cur) ? 'left' : 'right';
+  showScr(tab, dir);
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('on'));
+  const ni = document.getElementById('ni-' + tab);
+  if (ni) ni.classList.add('on');
+  if (tab === 'write') setTimeout(initWriteRadar, 380);
+}
+
+function goBack(to) { showScr(to, 'left'); navGo(to); }
+
+function gotoDetail(idx) {
+  const r = restaurants[idx];
+  document.getElementById('dtitle').textContent = r.name;
+  document.getElementById('dhero').textContent = r.emoji;
+  document.getElementById('dname').textContent = r.name;
+  document.getElementById('dcat').textContent = r.cat;
+  document.getElementById('dcat').style.background = r.catColor;
+  document.getElementById('daddr').textContent = '📍 ' + r.addr;
+  document.getElementById('dscore').textContent = r.score;
+  document.getElementById('mapaddr').textContent = r.addr;
+  const ids = ['taste','value','atm','svc','deco','acc'];
+  r.scores.forEach((v,i) => {
+    const b = document.getElementById('b-'+ids[i]);
+    const bv = document.getElementById('bv-'+ids[i]);
+    if(b) b.style.width = (v/5*100)+'%';
+    if(bv) bv.textContent = v.toFixed(1);
+  });
+  showScr('detail', 'right');
+  setTimeout(() => initDetailRadar(r.scores), 360);
+}
+
+function jumpTo(id, btn) {
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showScr(id, 'right');
+  if (id === 'detail') setTimeout(() => initDetailRadar(restaurants[0].scores), 360);
+  if (id === 'write') setTimeout(initWriteRadar, 360);
+}
+
+function chipSel(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ───── RADAR CHARTS ─────
+const radarCfg = (data, color) => ({
+  type: 'radar',
+  data: {
+    labels: ['맛','가성비','분위기','서비스','데코레이션','접근성'],
+    datasets: [{
+      data, fill: true,
+      backgroundColor: color + '2A',
+      borderColor: color,
+      borderWidth: 2.5,
+      pointBackgroundColor: color,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+    }]
+  },
+  options: {
+    responsive: false, animation: { duration: 600 },
+    scales: {
+      r: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1, font:{size:8}, color:'#bbb', backdropColor:'transparent' },
+        grid: { color:'rgba(0,0,0,0.07)' },
+        angleLines: { color:'rgba(0,0,0,0.07)' },
+        pointLabels: { font:{size:11, weight:'600'}, color:'#555' }
+      }
+    },
+    plugins: { legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.parsed.r}점`}} }
+  }
+});
+
+function initDetailRadar(data) {
+  const canvas = document.getElementById('radarDetail');
+  if (radarDetail) radarDetail.destroy();
+  radarDetail = new Chart(canvas, radarCfg(data, '#FF6B35'));
+}
+
+function initWriteRadar() {
+  const canvas = document.getElementById('radarWrite');
+  if (radarWrite) radarWrite.destroy();
+  const d = CATS.map(c => scores[c] || 0);
+  radarWrite = new Chart(canvas, radarCfg(d, '#6C63FF'));
+}
+
+function updateWriteRadar() {
+  if (!radarWrite) return;
+  radarWrite.data.datasets[0].data = CATS.map(c => scores[c] || 0);
+  radarWrite.update();
+}
+
+// ───── STAR RATING ─────
+function rateStar(star) {
+  const cat = star.dataset.c;
+  const val = parseInt(star.dataset.v);
+  scores[cat] = val;
+  const container = document.getElementById('st-' + cat);
+  container.querySelectorAll('.star').forEach((s,i) => {
+    s.classList.toggle('lit', i < val);
+  });
+  document.getElementById('sn-' + cat).textContent = val + '.0';
+  updateWriteRadar();
+}
+
+// Star hover
+document.querySelectorAll('.star').forEach(s => {
+  s.addEventListener('mouseover', function() {
+    const cat = this.dataset.c, val = parseInt(this.dataset.v);
+    document.getElementById('st-'+cat).querySelectorAll('.star').forEach((st,i) => {
+      st.style.color = i < val ? 'var(--yellow)' : '#e0d8d3';
+    });
+  });
+  s.addEventListener('mouseout', function() {
+    const cat = this.dataset.c, saved = scores[cat] || 0;
+    document.getElementById('st-'+cat).querySelectorAll('.star').forEach((st,i) => {
+      st.style.color = i < saved ? 'var(--yellow)' : '#e0d8d3';
+    });
+  });
+});
+
+// ───── SUBMIT ─────
+function submitReview() {
+  const filled = CATS.filter(c => scores[c] > 0).length;
+  if (filled < 6) { alert(`아직 ${6-filled}개 항목을 평가하지 않았어요 🍽️`); return; }
+  const total = (CATS.reduce((a,c)=>a+scores[c],0)/6).toFixed(1);
+  alert(`리뷰가 등록되었습니다! 🎉\n평균 점수: ⭐ ${total}`);
+  CATS.forEach(c => { scores[c]=0; document.getElementById('sn-'+c).textContent='-'; document.getElementById('st-'+c).querySelectorAll('.star').forEach(s=>{s.classList.remove('lit');s.style.color='';}) });
+  updateWriteRadar();
+  goBack('home');
+}
+</script>
+</body>
+</html>
