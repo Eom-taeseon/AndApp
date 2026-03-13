@@ -1,0 +1,6 @@
+# 자동화 실행 로그 (로컬 전용)
+scripts/logs/
+
+# Claude Code 로컬 설정 및 워크트리
+.claude/settings.local.json
+.claude/worktrees/
