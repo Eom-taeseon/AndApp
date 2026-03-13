@@ -20,11 +20,11 @@ Shared Kernel 변경 시 모든 Context에 영향이 미치므로 **최소한으
 ```js
 // shared/types/score.js
 export const SCORE_DIMENSIONS = [
-  { key: 'taste',       label: '맛',        icon: '🍴', dbColumn: 'score_taste' },
+  { key: 'taste',       label: '음식맛',    icon: '🍴', dbColumn: 'score_taste' },
   { key: 'value',       label: '가성비',    icon: '💰', dbColumn: 'score_value' },
   { key: 'atmosphere',  label: '분위기',    icon: '🌿', dbColumn: 'score_atmosphere' },
   { key: 'service',     label: '서비스',    icon: '🙏', dbColumn: 'score_service' },
-  { key: 'decoration',  label: '데코레이션', icon: '📸', dbColumn: 'score_decoration' },
+  { key: 'decoration',  label: '비주얼',    icon: '📸', dbColumn: 'score_decoration' },
   { key: 'access',      label: '접근성',    icon: '📍', dbColumn: 'score_access' },
 ]
 

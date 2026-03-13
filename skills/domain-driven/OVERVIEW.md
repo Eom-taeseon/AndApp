@@ -13,7 +13,7 @@
 
 ### 핵심 도메인 (Core Domain)
 
-**리뷰 평가 시스템** — 6가지 독립 항목(맛·가성비·분위기·서비스·데코레이션·접근성)을 점수화하여 레이더 차트로 시각화하는 것이 이 서비스의 핵심 가치.
+**리뷰 평가 시스템** — 6가지 독립 항목(음식맛·가성비·분위기·서비스·비주얼·접근성)을 점수화하여 레이더 차트로 시각화하는 것이 이 서비스의 핵심 가치.
 
 ### 유비쿼터스 언어 (Ubiquitous Language)
 
@@ -34,30 +34,35 @@
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    폰슐랭 시스템                       │
-│                                                       │
-│  ┌──────────┐    ┌─────────────┐    ┌──────────────┐  │
-│  │ Identity │───▶│  Restaurant │◀───│   Review     │  │
-│  │ Context  │    │  Context    │    │   Context    │  │
-│  │          │    │             │    │  (Core)      │  │
-│  └──────────┘    └─────────────┘    └──────┬───────┘  │
-│       │                                     │         │
-│       │          ┌─────────────┐    ┌───────▼───────┐ │
-│       └─────────▶│  Discovery  │◀───│Visualization │ │
-│                  │  Context    │    │  Context      │ │
-│                  └─────────────┘    └───────────────┘ │
+│                  폰슐랭 시스템                       │
+│                                                     │
+│  ┌──────────┐                   ┌─────────────┐     │
+│  │ Identity │──────┐     ┌──────│ Restaurant  │     │
+│  │ Context  │      │     │      │ Context     │     │
+│  └────┬─────┘      ▼     ▼      └─────────────┘     │
+│       │       ┌──────────────┐                      │
+│       │       │   Review     │                      │
+│       │       │  Context     │                      │
+│       │       │  (Core)      │                      │
+│       │       └──┬────────┬──┘                      │
+│       │          ▼        ▼                         │
+│       │  ┌────────────┐ ┌──────────────┐            │
+│       └─▶│ Discovery  │ │Visualization │            │
+│          │ Context    │ │ Context      │            │
+│          └────────────┘ └──────────────┘            │
 └─────────────────────────────────────────────────────┘
 ```
 
 ### Context 간 관계
 
 
-| 관계                     | 유형                 | 설명                      |
-| ---------------------- | ------------------ | ----------------------- |
-| Identity → Review      | Customer-Supplier  | 인증된 사용자만 리뷰 작성 가능       |
-| Restaurant → Review    | Shared Kernel      | Restaurant ID를 공유       |
-| Review → Visualization | Conformist         | 레이더 차트는 리뷰 점수 형식에 종속    |
-| Review → Discovery     | Published Language | 피드·검색은 리뷰 데이터를 읽기 전용 소비 |
+| 관계                     | 유형                 | 설명                              |
+| ---------------------- | ------------------ | ------------------------------- |
+| Identity → Review      | Customer-Supplier  | 인증된 사용자만 리뷰 작성 가능               |
+| Identity → Discovery   | Published Language | 피드 카드에 리뷰어 프로필(닉네임·사진) 소비       |
+| Restaurant → Review    | Shared Kernel      | Restaurant ID를 공유               |
+| Review → Visualization | Conformist         | 레이더 차트는 리뷰 점수 형식에 종속            |
+| Review → Discovery     | Published Language | 피드·검색은 리뷰 데이터를 읽기 전용 소비         |
 
 
 ---
