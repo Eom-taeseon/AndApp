@@ -15,7 +15,7 @@ export default function FeedPage() {
           const totalScore = +(
             (Number(review.score_taste) + Number(review.score_value) +
              Number(review.score_atmosphere) + Number(review.score_service) +
-             Number(review.score_decoration) + Number(review.score_access)) / 6
+             Number(review.score_visual) + Number(review.score_access)) / 6
           ).toFixed(2)
           return { ...review, totalScore }
         })
@@ -48,7 +48,7 @@ export default function FeedPage() {
           나만의 맛집을 6각형으로
         </h2>
         <p className="text-white/80 text-xs">
-          맛 · 가성비 · 분위기 · 서비스 · 데코 · 접근성
+          음식맛 · 가성비 · 분위기 · 서비스 · 비주얼 · 접근성
         </p>
       </div>
 

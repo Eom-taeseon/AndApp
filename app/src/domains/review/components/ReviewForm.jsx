@@ -53,7 +53,7 @@ export default function ReviewForm() {
           score_value: form.scores.value,
           score_atmosphere: form.scores.atmosphere,
           score_service: form.scores.service,
-          score_decoration: form.scores.decoration,
+          score_visual: form.scores.visual,
           score_access: form.scores.access,
         },
         content: form.content,

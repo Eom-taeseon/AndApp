@@ -2,13 +2,13 @@ import { SCORE_DIMENSIONS, SCORE_MIN, SCORE_MAX, SCORE_STEP } from '../../../sha
 
 // 6가지 점수를 하나의 불변 값 객체로 캡슐화
 export class ScoreSet {
-  constructor({ taste, value, atmosphere, service, decoration, access }) {
-    this.#validate(taste, value, atmosphere, service, decoration, access)
+  constructor({ taste, value, atmosphere, service, visual, access }) {
+    this.#validate(taste, value, atmosphere, service, visual, access)
     this.taste = taste
     this.value = value
     this.atmosphere = atmosphere
     this.service = service
-    this.decoration = decoration
+    this.visual = visual
     this.access = access
     Object.freeze(this)
   }
@@ -24,13 +24,13 @@ export class ScoreSet {
 
   get total() {
     const sum = this.taste + this.value + this.atmosphere
-      + this.service + this.decoration + this.access
+      + this.service + this.visual + this.access
     return +(sum / 6).toFixed(2)
   }
 
   toArray() {
     return [this.taste, this.value, this.atmosphere,
-            this.service, this.decoration, this.access]
+            this.service, this.visual, this.access]
   }
 
   toRadarData() {
@@ -48,7 +48,7 @@ export class ScoreSet {
       value: row.score_value,
       atmosphere: row.score_atmosphere,
       service: row.score_service,
-      decoration: row.score_decoration,
+      visual: row.score_visual,
       access: row.score_access,
     })
   }
@@ -60,7 +60,7 @@ export class ScoreSet {
       value: obj.value || SCORE_MIN,
       atmosphere: obj.atmosphere || SCORE_MIN,
       service: obj.service || SCORE_MIN,
-      decoration: obj.decoration || SCORE_MIN,
+      visual: obj.visual || SCORE_MIN,
       access: obj.access || SCORE_MIN,
     })
   }

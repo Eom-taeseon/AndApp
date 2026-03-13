@@ -24,7 +24,7 @@ export const SCORE_DIMENSIONS = [
   { key: 'value',       label: '가성비',    icon: '💰', dbColumn: 'score_value' },
   { key: 'atmosphere',  label: '분위기',    icon: '🌿', dbColumn: 'score_atmosphere' },
   { key: 'service',     label: '서비스',    icon: '🙏', dbColumn: 'score_service' },
-  { key: 'decoration',  label: '비주얼',    icon: '📸', dbColumn: 'score_decoration' },
+  { key: 'visual',      label: '비주얼',    icon: '📸', dbColumn: 'score_visual' },
   { key: 'access',      label: '접근성',    icon: '📍', dbColumn: 'score_access' },
 ]
 

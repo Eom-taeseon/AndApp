@@ -21,11 +21,11 @@
 
 | 항목 | 설명 | 아이콘 |
 |---|---|---|
-| 맛 | 음식이 얼마나 맛있는지 | 🍴 |
+| 음식맛 | 음식이 얼마나 맛있는지 | 🍴 |
 | 가성비 | 돈이 아깝지 않은지 | 💰 |
 | 분위기 | 가게 인테리어·분위기 | 🌿 |
 | 서비스 | 직원 서비스 수준 | 🙏 |
-| 데코레이션 | 음식 플레이팅, 사진 퀄리티 | 📸 |
+| 비주얼 | 음식 플레이팅, 사진 퀄리티 | 📸 |
 | 접근성 | 교통·주차 편의성 | 📍 |
 
 각 항목 1~5점 (0.5점 단위) → 레이더 차트로 시각화
@@ -82,11 +82,11 @@
 
 [reviews]
 - id, user_id, restaurant_id
-- score_taste        (맛)        FLOAT
+- score_taste        (음식맛)    FLOAT
 - score_value        (가성비)    FLOAT
 - score_atmosphere   (분위기)    FLOAT
 - score_service      (서비스)    FLOAT
-- score_decoration   (데코레이션) FLOAT
+- score_visual       (비주얼)    FLOAT
 - score_access       (접근성)    FLOAT
 - score_total        (평균)      FLOAT (자동 계산)
 - content            TEXT

@@ -463,7 +463,7 @@
             <div class="rcard-addr">📍 서울 종로구 청계천로 85</div>
             <div class="rcard-text">뚝배기에 나오는 순대국밥이 정말 진하고 맛있었어요. 가격도 착하고 아저씨도 친절하셨는데 주차가 좀 불편한게 흠이에요.</div>
             <div class="score-pills">
-              <span class="spill">🍴 맛 <b>4.5</b></span>
+              <span class="spill">🍴 음식맛 <b>4.5</b></span>
               <span class="spill">💰 가성비 <b>4.5</b></span>
               <span class="spill">🌿 분위기 <b>3.0</b></span>
               <span class="spill">🙏 서비스 <b>4.0</b></span>
@@ -491,7 +491,7 @@
             <div class="rcard-addr">📍 서울 용산구 이태원로 177</div>
             <div class="rcard-text">분위기 완전 감성 맛집! 크림파스타가 정말 진했고 플레이팅도 너무 예뻐서 사진 100장 찍었어요. 데이트 코스로 강추합니다.</div>
             <div class="score-pills">
-              <span class="spill">🍴 맛 <b>4.5</b></span>
+              <span class="spill">🍴 음식맛 <b>4.5</b></span>
               <span class="spill">💰 가성비 <b>3.5</b></span>
               <span class="spill">🌿 분위기 <b>5.0</b></span>
               <span class="spill">🙏 서비스 <b>4.5</b></span>
@@ -519,7 +519,7 @@
             <div class="rcard-addr">📍 서울 마포구 연남로 27</div>
             <div class="rcard-text">라떼 아트가 정말 예술이에요. 창가 자리가 너무 예뻐서 오래 있게 되는 카페. 주말엔 웨이팅이 있으니 참고!</div>
             <div class="score-pills">
-              <span class="spill">🍴 맛 <b>4.0</b></span>
+              <span class="spill">🍴 음식맛 <b>4.0</b></span>
               <span class="spill">💰 가성비 <b>3.5</b></span>
               <span class="spill">🌿 분위기 <b>5.0</b></span>
               <span class="spill">🙏 서비스 <b>4.5</b></span>
@@ -563,7 +563,7 @@
 
       <div class="dsection">
         <div class="dsection-title">📊 항목별 평균 점수</div>
-        <div class="barrow"><div class="barlabel">🍴 맛</div><div class="bartrack"><div class="barfill" id="b-taste"></div></div><div class="barval" id="bv-taste">-</div></div>
+        <div class="barrow"><div class="barlabel">🍴 음식맛</div><div class="bartrack"><div class="barfill" id="b-taste"></div></div><div class="barval" id="bv-taste">-</div></div>
         <div class="barrow"><div class="barlabel">💰 가성비</div><div class="bartrack"><div class="barfill" id="b-value"></div></div><div class="barval" id="bv-value">-</div></div>
         <div class="barrow"><div class="barlabel">🌿 분위기</div><div class="bartrack"><div class="barfill" id="b-atm"></div></div><div class="barval" id="bv-atm">-</div></div>
         <div class="barrow"><div class="barlabel">🙏 서비스</div><div class="bartrack"><div class="barfill" id="b-svc"></div></div><div class="barval" id="bv-svc">-</div></div>
@@ -649,7 +649,7 @@
         <div class="wcard">
           <div class="wlabel">⭐ 항목별 평가</div>
           <div class="scrow">
-            <span class="scicon">🍴</span><span class="scname">맛</span>
+            <span class="scicon">🍴</span><span class="scname">음식맛</span>
             <div class="stars" id="st-taste">
               <span class="star" data-c="taste" data-v="1" onclick="rateStar(this)">★</span>
               <span class="star" data-c="taste" data-v="2" onclick="rateStar(this)">★</span>
@@ -693,7 +693,7 @@
             <span class="scnum" id="sn-svc">-</span>
           </div>
           <div class="scrow">
-            <span class="scicon">📸</span><span class="scname">데코레이션</span>
+            <span class="scicon">📸</span><span class="scname">비주얼</span>
             <div class="stars" id="st-deco">
               <span class="star" data-c="deco" data-v="1" onclick="rateStar(this)">★</span>
               <span class="star" data-c="deco" data-v="2" onclick="rateStar(this)">★</span>
@@ -750,7 +750,7 @@
         </div>
       </div>
       <div class="filter-row">
-        <button class="fchip on">🍴 맛 4+</button>
+        <button class="fchip on">🍴 음식맛 4+</button>
         <button class="fchip" onclick="this.classList.toggle('on')">💰 가성비 4+</button>
         <button class="fchip" onclick="this.classList.toggle('on')">🌿 분위기 4+</button>
         <button class="fchip" onclick="this.classList.toggle('on')">📸 데코 4+</button>
@@ -934,7 +934,7 @@ function chipSel(el) {
 const radarCfg = (data, color) => ({
   type: 'radar',
   data: {
-    labels: ['맛','가성비','분위기','서비스','데코레이션','접근성'],
+    labels: ['음식맛','가성비','분위기','서비스','비주얼','접근성'],
     datasets: [{
       data, fill: true,
       backgroundColor: color + '2A',

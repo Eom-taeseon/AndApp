@@ -18,7 +18,7 @@ export default function ProfilePage() {
         const reviews = data.map(r => {
           const totalScore = +(
             (Number(r.score_taste) + Number(r.score_value) + Number(r.score_atmosphere) +
-             Number(r.score_service) + Number(r.score_decoration) + Number(r.score_access)) / 6
+             Number(r.score_service) + Number(r.score_visual) + Number(r.score_access)) / 6
           ).toFixed(2)
           return { ...r, totalScore }
         })
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                     value: Number(review.score_value),
                     atmosphere: Number(review.score_atmosphere),
                     service: Number(review.score_service),
-                    decoration: Number(review.score_decoration),
+                    visual: Number(review.score_visual),
                     access: Number(review.score_access),
                   }} size={80} />
                 </div>

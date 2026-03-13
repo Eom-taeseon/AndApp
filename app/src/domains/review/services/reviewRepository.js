@@ -24,7 +24,7 @@ export async function createReview({ userId, restaurantId, scores, content, visi
       score_value: scores.score_value,
       score_atmosphere: scores.score_atmosphere,
       score_service: scores.score_service,
-      score_decoration: scores.score_decoration,
+      score_visual: scores.score_visual,
       score_access: scores.score_access,
       content,
       visited_at: visitedAt,
@@ -122,7 +122,7 @@ export async function getRestaurantAvgScores(restaurantId) {
       score_value: avg('score_value'),
       score_atmosphere: avg('score_atmosphere'),
       score_service: avg('score_service'),
-      score_decoration: avg('score_decoration'),
+      score_visual: avg('score_visual'),
       score_access: avg('score_access'),
       review_count: reviews.length,
     }
@@ -135,7 +135,7 @@ export async function getRestaurantAvgScores(restaurantId) {
     // RPC가 없으면 클라이언트에서 직접 계산 (폴백)
     const { data: reviews } = await supabase
       .from('reviews')
-      .select('score_taste, score_value, score_atmosphere, score_service, score_decoration, score_access')
+      .select('score_taste, score_value, score_atmosphere, score_service, score_visual, score_access')
       .eq('restaurant_id', restaurantId)
 
     if (!reviews || reviews.length === 0) return null
@@ -148,7 +148,7 @@ export async function getRestaurantAvgScores(restaurantId) {
       score_value: avg('score_value'),
       score_atmosphere: avg('score_atmosphere'),
       score_service: avg('score_service'),
-      score_decoration: avg('score_decoration'),
+      score_visual: avg('score_visual'),
       score_access: avg('score_access'),
       review_count: reviews.length,
     }

@@ -27,7 +27,7 @@ export default function RestaurantDetailPage() {
         const formattedReviews = revs.map(r => {
           const totalScore = +(
             (Number(r.score_taste) + Number(r.score_value) + Number(r.score_atmosphere) +
-             Number(r.score_service) + Number(r.score_decoration) + Number(r.score_access)) / 6
+             Number(r.score_service) + Number(r.score_visual) + Number(r.score_access)) / 6
           ).toFixed(2)
           return { ...r, restaurant: rest, totalScore }
         })
@@ -66,13 +66,13 @@ export default function RestaurantDetailPage() {
     value: avgScores.score_value,
     atmosphere: avgScores.score_atmosphere,
     service: avgScores.score_service,
-    decoration: avgScores.score_decoration,
+    visual: avgScores.score_visual,
     access: avgScores.score_access,
   } : null
 
   const totalAvg = avgScores
     ? +((avgScores.score_taste + avgScores.score_value + avgScores.score_atmosphere +
-         avgScores.score_service + avgScores.score_decoration + avgScores.score_access) / 6).toFixed(1)
+         avgScores.score_service + avgScores.score_visual + avgScores.score_access) / 6).toFixed(1)
     : null
 
   return (

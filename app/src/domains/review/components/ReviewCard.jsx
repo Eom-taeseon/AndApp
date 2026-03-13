@@ -11,7 +11,7 @@ export default function ReviewCard({ review }) {
     value: review.score_value,
     atmosphere: review.score_atmosphere,
     service: review.score_service,
-    decoration: review.score_decoration,
+    visual: review.score_visual,
     access: review.score_access,
   }
 

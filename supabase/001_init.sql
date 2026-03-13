@@ -65,13 +65,13 @@ CREATE TABLE reviews (
   score_value         NUMERIC(2,1) CHECK (score_value BETWEEN 1.0 AND 5.0),
   score_atmosphere    NUMERIC(2,1) CHECK (score_atmosphere BETWEEN 1.0 AND 5.0),
   score_service       NUMERIC(2,1) CHECK (score_service BETWEEN 1.0 AND 5.0),
-  score_decoration    NUMERIC(2,1) CHECK (score_decoration BETWEEN 1.0 AND 5.0),
+  score_visual    NUMERIC(2,1) CHECK (score_visual BETWEEN 1.0 AND 5.0),
   score_access        NUMERIC(2,1) CHECK (score_access BETWEEN 1.0 AND 5.0),
 
   -- 총점 자동 계산 (DB가 보장)
   score_total         NUMERIC(3,2) GENERATED ALWAYS AS (
                         (score_taste + score_value + score_atmosphere +
-                         score_service + score_decoration + score_access) / 6.0
+                         score_service + score_visual + score_access) / 6.0
                       ) STORED,
 
   content             TEXT,

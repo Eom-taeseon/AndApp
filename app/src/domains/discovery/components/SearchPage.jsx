@@ -75,12 +75,12 @@ export default function SearchPage() {
           const avgScores = avg ? {
             taste: avg.score_taste, value: avg.score_value,
             atmosphere: avg.score_atmosphere, service: avg.score_service,
-            decoration: avg.score_decoration, access: avg.score_access,
+            visual: avg.score_visual, access: avg.score_access,
           } : null
 
           const totalScore = avg
             ? +((avg.score_taste + avg.score_value + avg.score_atmosphere +
-                 avg.score_service + avg.score_decoration + avg.score_access) / 6).toFixed(1)
+                 avg.score_service + avg.score_visual + avg.score_access) / 6).toFixed(1)
             : null
 
           return (

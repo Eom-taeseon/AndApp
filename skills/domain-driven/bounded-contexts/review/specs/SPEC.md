@@ -27,7 +27,7 @@ Review (Aggregate Root)
 │   ├── value: Decimal [1.0 ~ 5.0]
 │   ├── atmosphere: Decimal [1.0 ~ 5.0]
 │   ├── service: Decimal [1.0 ~ 5.0]
-│   ├── decoration: Decimal [1.0 ~ 5.0]
+│   ├── visual: Decimal [1.0 ~ 5.0]
 │   └── access: Decimal [1.0 ~ 5.0]
 ├── totalScore: Decimal (Computed, scores 평균)
 ├── content: String (텍스트 후기)
@@ -46,13 +46,13 @@ Review (Aggregate Root)
 ```js
 // domains/review/value-objects/ScoreSet.js
 export class ScoreSet {
-  constructor({ taste, value, atmosphere, service, decoration, access }) {
-    this.#validate(taste, value, atmosphere, service, decoration, access)
+  constructor({ taste, value, atmosphere, service, visual, access }) {
+    this.#validate(taste, value, atmosphere, service, visual, access)
     this.taste = taste
     this.value = value
     this.atmosphere = atmosphere
     this.service = service
-    this.decoration = decoration
+    this.visual = visual
     this.access = access
     Object.freeze(this)
   }
@@ -66,13 +66,13 @@ export class ScoreSet {
 
   get total() {
     const sum = this.taste + this.value + this.atmosphere
-      + this.service + this.decoration + this.access
+      + this.service + this.visual + this.access
     return +(sum / 6).toFixed(2)
   }
 
   toArray() {
     return [this.taste, this.value, this.atmosphere,
-            this.service, this.decoration, this.access]
+            this.service, this.visual, this.access]
   }
 
   toRadarData() {
@@ -108,12 +108,12 @@ CREATE TABLE reviews (
   score_value         NUMERIC(2,1) CHECK (score_value BETWEEN 1.0 AND 5.0),
   score_atmosphere    NUMERIC(2,1) CHECK (score_atmosphere BETWEEN 1.0 AND 5.0),
   score_service       NUMERIC(2,1) CHECK (score_service BETWEEN 1.0 AND 5.0),
-  score_decoration    NUMERIC(2,1) CHECK (score_decoration BETWEEN 1.0 AND 5.0),
+  score_visual    NUMERIC(2,1) CHECK (score_visual BETWEEN 1.0 AND 5.0),
   score_access        NUMERIC(2,1) CHECK (score_access BETWEEN 1.0 AND 5.0),
 
   score_total         NUMERIC(3,2) GENERATED ALWAYS AS (
                         (score_taste + score_value + score_atmosphere +
-                         score_service + score_decoration + score_access) / 6.0
+                         score_service + score_visual + score_access) / 6.0
                       ) STORED,
 
   content             TEXT,

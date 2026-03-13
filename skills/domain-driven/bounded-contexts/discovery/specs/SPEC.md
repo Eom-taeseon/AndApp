@@ -70,7 +70,7 @@ const { data } = await supabase
 // 맛집 상세 - 평균 점수 집계
 const { data } = await supabase
   .from('reviews')
-  .select('score_taste, score_value, score_atmosphere, score_service, score_decoration, score_access')
+  .select('score_taste, score_value, score_atmosphere, score_service, score_visual, score_access')
   .eq('restaurant_id', id)
 ```
 
