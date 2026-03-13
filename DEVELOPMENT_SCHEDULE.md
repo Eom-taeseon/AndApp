@@ -1,6 +1,6 @@
 # 🍽️ 폰슐랭 — 개발 일정
 
-> 브랜치 전략: `main` ← `dev` ← `feat/*` (도메인별 브랜치)
+> 브랜치 전략: Git Flow — `main` ← `dev` ← `feature/*` (기능별 브랜치)
 > 기준일: 2026-03-11
 
 ---
@@ -8,18 +8,24 @@
 ## 브랜치 개요
 
 ```
-main
-└── dev
-    ├── feat/identity        (Phase 1)
-    ├── feat/restaurant      (Phase 2)
-    ├── feat/review          (Phase 3 — Core)
-    ├── feat/visualization   (Phase 3 — Core, review와 병행)
-    └── feat/discovery       (Phase 4)
+main                              ← 프로덕션 릴리스 (태그: v1.0.0)
+├── hotfix/{버전}-{이슈번호}       ← main에서 분기 → main + dev 머지
+└── dev                           ← 개발 통합
+    ├── feature/{도메인}-{기능}-{YYMMDD}  ← dev에서 분기 → dev PR 머지
+    └── release/{버전}-{YYMMDD}          ← dev에서 분기 → QA → main + dev 머지
 ```
+
+### 브랜치 네이밍 규칙
+
+| 타입 | 패턴 | 예시 |
+|---|---|---|
+| feature | `feature/{도메인}-{기능}-{YYMMDD}` | `feature/identity-login-260311` |
+| release | `release/{버전}-{YYMMDD}` | `release/1.0.0-260330` |
+| hotfix | `hotfix/{버전}-{이슈번호}` | `hotfix/1.0.1-#42` |
 
 ---
 
-## Phase 1 — `feat/identity` (인증)
+## Phase 1 — `feature/identity` (인증)
 **기간**: 2026-03-11 ~ 2026-03-14
 **목표**: 사용자 인증 플로우 완성
 
@@ -36,7 +42,7 @@ main
 
 ---
 
-## Phase 2 — `feat/restaurant` (맛집 등록)
+## Phase 2 — `feature/restaurant` (맛집 등록)
 **기간**: 2026-03-15 ~ 2026-03-18
 **목표**: 네이버 플레이스 기반 맛집 등록 기능
 
@@ -52,18 +58,18 @@ main
 
 ---
 
-## Phase 3 — `feat/review` + `feat/visualization` (리뷰 + 레이더 차트)
+## Phase 3 — `feature/review` + `feature/visualization` (리뷰 + 레이더 차트)
 **기간**: 2026-03-19 ~ 2026-03-25
 **목표**: 핵심 기능 — 6항목 리뷰 작성 + 레이더 차트 시각화
 
-### `feat/review` 작업 목록
+### `feature/review` 작업 목록
 - [ ] `ScoreInput.jsx` — 0.5 단위 별점 입력 UI
 - [ ] `ReviewForm.jsx` — 맛집 선택 + 6항목 입력 + 텍스트 후기
 - [ ] `reviewRepository.js` — insert / fetch
 - [ ] `useReviewForm.js` 훅 완성
 - [ ] `ScoreSet.js` value object 검증 로직
 
-### `feat/visualization` 작업 목록 (병행)
+### `feature/visualization` 작업 목록 (병행)
 - [ ] `ReviewRadarChart.jsx` — Recharts 기반 육각형 레이더 차트
 - [ ] `MiniRadarChart.jsx` — 피드 카드용 축소 버전
 - [ ] `LiveRadarPreview.jsx` — 리뷰 작성 중 실시간 미리보기
@@ -73,7 +79,7 @@ main
 
 ---
 
-## Phase 4 — `feat/discovery` (피드 & 검색)
+## Phase 4 — `feature/discovery` (피드 & 검색)
 **기간**: 2026-03-26 ~ 2026-03-30
 **목표**: 사용자 탐색 경험 완성
 
@@ -92,10 +98,10 @@ main
 
 | Phase | 브랜치 | 시작 | 종료 | 상태 |
 |---|---|---|---|---|
-| 1 | `feat/identity` | 2026-03-11 | 2026-03-14 | 🔨 진행 중 |
-| 2 | `feat/restaurant` | 2026-03-15 | 2026-03-18 | ⬜ 대기 |
-| 3 | `feat/review` + `feat/visualization` | 2026-03-19 | 2026-03-25 | ⬜ 대기 |
-| 4 | `feat/discovery` | 2026-03-26 | 2026-03-30 | ⬜ 대기 |
+| 1 | `feature/identity` | 2026-03-11 | 2026-03-14 | 🔨 진행 중 |
+| 2 | `feature/restaurant` | 2026-03-15 | 2026-03-18 | ⬜ 대기 |
+| 3 | `feature/review` + `feature/visualization` | 2026-03-19 | 2026-03-25 | ⬜ 대기 |
+| 4 | `feature/discovery` | 2026-03-26 | 2026-03-30 | ⬜ 대기 |
 
 ---
 

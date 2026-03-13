@@ -7,12 +7,13 @@
 ### Step 1 — 현재 상태 파악
 1. `DEVELOPMENT_SCHEDULE.md`를 읽어 현재 Phase와 미완료 작업 목록을 확인한다.
 2. `git status`와 `git branch` 로 현재 브랜치를 확인한다.
-3. 현재 Phase에 해당하는 `feat/*` 브랜치가 없으면 `dev`에서 분기하여 생성한다.
-   - Phase 1 → `feat/identity`
-   - Phase 2 → `feat/restaurant`
-   - Phase 3 → `feat/review` 또는 `feat/visualization`
-   - Phase 4 → `feat/discovery`
-4. 해당 feat 브랜치로 checkout한다.
+3. 현재 Phase에 해당하는 `feature/*` 브랜치가 없으면 `dev`에서 분기하여 생성한다.
+   - 네이밍: `feature/{도메인}-{기능}-{YYMMDD}` (예: `feature/identity-login-260314`)
+   - Phase 1 → `feature/identity-*`
+   - Phase 2 → `feature/restaurant-*`
+   - Phase 3 → `feature/review-*` 또는 `feature/visualization-*`
+   - Phase 4 → `feature/discovery-*`
+4. 해당 feature 브랜치로 checkout한다.
 
 ### Step 2 — 다음 작업 선택
 1. 해당 Phase의 LOG.md를 읽어 이미 완료된 작업을 확인한다.
@@ -52,7 +53,7 @@
 현재 Phase의 모든 작업이 완료되었으면:
 1. feat 브랜치에서 `dev` 브랜치로 PR을 생성한다.
    ```
-   gh pr create --base dev --head feat/{domain} \
+   gh pr create --base dev --head feature/{domain}-{기능}-{YYMMDD} \
      --title "Phase {N}: {domain} 완료" \
      --body "## 완료된 작업\n{완료 목록}\n\n## 완료 기준 달성\n{완료 기준 체크}"
    ```
@@ -61,7 +62,7 @@
 
 ## 제약 사항
 
-- 브랜치는 반드시 `feat/*` → `dev` 방향으로만 작업한다. `main`에 직접 push하지 않는다.
+- 브랜치는 반드시 `feature/*` → `dev` 방향으로만 작업한다. `main`에 직접 push하지 않는다.
 - 커밋 메시지 컨벤션: `feat:` / `fix:` / `refactor:` / `docs:`
 - Supabase 환경변수는 `app/.env`에 이미 설정되어 있으므로 수정하지 않는다.
 - 현재 Phase가 없거나 모든 Phase가 완료된 경우, 작업 없음 상태를 출력하고 종료한다.

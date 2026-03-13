@@ -34,12 +34,14 @@ skills/domain-driven/bounded-contexts/
 
 ## 브랜치 전략
 
+Git Flow 기반. 상세 규칙은 `DEVELOPMENT_SCHEDULE.md` 참조.
+
 ```
-main ← dev ← feat/identity | feat/restaurant | feat/review | feat/visualization | feat/discovery
+main ← dev ← feature/{도메인}-{기능}-{YYMMDD}
 ```
 
 커밋 컨벤션: `feat:` `fix:` `refactor:` `docs:`
 
 ## 현재 Phase
 
-Phase 1 — `feat/identity` (인증) 진행 중 (2026-03-11 ~ 03-14)
+Phase 1 — `feature/identity` (인증) 진행 중 (2026-03-11 ~ 03-14)
