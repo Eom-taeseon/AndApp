@@ -6,11 +6,13 @@ export default function SignupForm({ onSuccess }) {
   const [nickname, setNickname] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const { signUp, loading } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     if (nickname.length < 2 || nickname.length > 20) {
       setError('닉네임은 2~20자로 입력해주세요.')
       return
@@ -19,9 +21,11 @@ export default function SignupForm({ onSuccess }) {
       setError('비밀번호는 8자 이상이어야 합니다.')
       return
     }
-    const { error: err } = await signUp({ email, password, nickname })
-    if (err) {
-      setError(err)
+    const result = await signUp({ email, password, nickname })
+    if (result.error) {
+      setError(result.error)
+    } else if (result.needsEmailConfirm) {
+      setSuccessMessage(result.message)
     } else {
       onSuccess?.()
     }
@@ -75,6 +79,9 @@ export default function SignupForm({ onSuccess }) {
         />
       </div>
       {error && <p className="text-xs text-red-500">{error}</p>}
+      {successMessage && (
+        <p className="text-xs text-green-600 bg-green-50 p-3 rounded-lg">{successMessage}</p>
+      )}
       <button
         type="submit"
         disabled={loading}

@@ -49,6 +49,7 @@ export default function LoginForm() {
             focus:ring-2 focus:ring-[var(--primary)]/30"
           style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
           placeholder="비밀번호를 입력하세요"
+          required
         />
       </div>
       {error && <p className="text-xs text-red-500">{error}</p>}
