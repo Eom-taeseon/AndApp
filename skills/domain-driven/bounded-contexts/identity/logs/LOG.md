@@ -7,13 +7,26 @@
 
 ## ⚡ 강조 사항 (항상 기억할 것)
 
-- `useAuth()` 훅은 `AuthContext.jsx`에서 export (별도 파일 아님)
+- `authService.js`가 Supabase Auth SDK의 ACL 역할 (직접 SDK 호출 금지)
+- `useAuth()` 훅은 `hooks/useAuth.js`에서 re-export, 원본은 `AuthContext.jsx`
 - Mock 모드: `VITE_SUPABASE_URL` 미설정 시 자동 전환
 - 닉네임 2~20자, 비밀번호 8자 이상 클라이언트 검증
 
 ---
 
 ## 🛠️ 작업 로그
+
+### [2026-03-14] authService ACL 추출 + useAuth 훅 분리
+
+**작업 내용:**
+- `services/authService.js` 생성 — Supabase Auth SDK 호출을 ACL로 캡슐화
+  - signUp, signIn, signOut, getCurrentUser, onAuthStateChange, fetchProfile
+- `AuthContext.jsx` 리팩토링 — authService 의존으로 전환, 직접 SDK 호출 제거
+- `hooks/useAuth.js` 생성 — 스펙 디렉터리 구조에 맞게 re-export
+
+**결과:**
+- 빌드 성공 확인
+- 스펙의 ACL 패턴 및 디렉터리 구조 준수
 
 ### [2026-03-14] ProtectedRoute 인증 가드 추가
 
@@ -48,7 +61,7 @@
 
 ## 💡 메모 & 아이디어
 
-- authService.js ACL 분리는 추후 리팩터링 시 진행 (현재는 AuthContext에 직접 구현)
+- ~~authService.js ACL 분리는 추후 리팩터링 시 진행~~ → 완료 (2026-03-14)
 - Supabase `users` 테이블 + RLS 정책은 DB 콘솔에서 수동 적용 필요
 
 ---
