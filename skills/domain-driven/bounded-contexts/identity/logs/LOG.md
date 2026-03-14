@@ -16,6 +16,17 @@
 
 ## 🛠️ 작업 로그
 
+### [2026-03-14] Phase 1 마무리 — 폼 수정 + dev PR 준비
+
+**작업 내용:**
+- `LoginForm.jsx`: password 입력에 `required` 속성 추가
+- `SignupForm.jsx`: `needsEmailConfirm` 응답 처리 — 이메일 인증 안내 메시지 표시
+- `feature/identity-guard-260314` → `dev` PR 준비 (push 완료)
+
+**결과:**
+- Phase 1 코드 작업 완료
+- dev PR 생성 대기 (GitHub에서 수동 생성 필요)
+
 ### [2026-03-14] authService ACL 추출 + useAuth 훅 분리
 
 **작업 내용:**
@@ -73,3 +84,6 @@
 - [x] 모바일 반응형 확인 (max-w-md 레이아웃)
 - [ ] Supabase RLS 정책 적용 (DB 콘솔에서 수동 적용 필요)
 - [x] 미인증 사용자 리다이렉트 (`/review/new` → `/auth`)
+- [x] SignupForm 이메일 인증 안내 메시지 처리
+- [x] LoginForm password required 속성 추가
+- [ ] `dev` PR 생성 및 머지 (GitHub에서 수동)
