@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
-import { AuthProvider } from './domains/identity/context/AuthContext'
+import { AuthProvider, useAuth } from './domains/identity/context/AuthContext'
 import BottomNav from './shared/components/BottomNav'
 import TopHeader from './shared/components/TopHeader'
 
@@ -11,6 +11,14 @@ import RestaurantDetailPage from './domains/discovery/components/RestaurantDetai
 import ReviewForm from './domains/review/components/ReviewForm'
 import AuthPage from './domains/identity/components/AuthPage'
 import ProfilePage from './pages/ProfilePage'
+
+// 인증 필요 라우트 가드
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (!user) return <Navigate to="/auth" replace />
+  return children
+}
 
 function AppLayout() {
   const location = useLocation()
@@ -39,7 +47,7 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<FeedPage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/review/new" element={<ReviewForm />} />
+          <Route path="/review/new" element={<ProtectedRoute><ReviewForm /></ProtectedRoute>} />
           <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
