@@ -15,6 +15,7 @@ export default function ReviewForm() {
   const form = useReviewForm()
   const [submitted, setSubmitted] = useState(false)
   const [step, setStep] = useState(0) // 0: 맛집/날짜, 1: 점수, 2: 후기
+  const [submitError, setSubmitError] = useState(null)
 
   // 비로그인 시 인증 페이지로
   if (!user) {
@@ -34,8 +35,6 @@ export default function ReviewForm() {
       </div>
     )
   }
-
-  const [submitError, setSubmitError] = useState(null)
 
   const handleSubmit = async () => {
     try {

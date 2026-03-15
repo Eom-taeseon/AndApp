@@ -29,6 +29,16 @@
 - Mock 모드에서는 기존 로컬 데이터로 동작
 - `restaurantRepository.js`의 upsert로 선택된 맛집 DB 저장 가능
 
+### [2026-03-15] Phase 2 코드 품질 개선
+
+**작업 내용:**
+- `RestaurantSearchResult.jsx` 별도 컴포넌트 분리 (스펙 구조 준수)
+- `ReviewForm.jsx` React Hooks 규칙 위반 수정 — `useState(submitError)`가 조건부 return 뒤에서 호출되던 문제를 컴포넌트 최상단으로 이동
+
+**결과:**
+- Restaurant 컴포넌트 구조가 스펙과 일치: `RestaurantSearchInput` + `RestaurantSearchResult`
+- React strict mode에서도 안전한 Hooks 호출 순서 보장
+
 ### [2026-03-15] Phase 2 버그 수정
 
 **작업 내용:**
@@ -66,5 +76,5 @@
 - [x] RestaurantSearchInput 훅 기반 리팩터링
 - [x] Supabase restaurants 테이블 확인 (이미 존재)
 - [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
-- [ ] RestaurantSearchResult.jsx 별도 컴포넌트 분리 (선택)
+- [x] RestaurantSearchResult.jsx 별도 컴포넌트 분리
 - [ ] NaverMap.jsx 지도 렌더링 (선택)

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRestaurantSearch } from '../hooks/useRestaurantSearch'
+import RestaurantSearchResult from './RestaurantSearchResult'
 
 export default function RestaurantSearchInput({ selected, onSelect }) {
   const [query, setQuery] = useState('')
@@ -67,18 +68,11 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
           shadow-lg overflow-hidden z-30 max-h-60 overflow-y-auto"
           style={{ border: '1px solid var(--border)' }}>
           {results.map((r, i) => (
-            <li key={r.naverPlaceId || r.id || i}>
-              <button
-                type="button"
-                onClick={() => { onSelect(r); setShowResults(false); setQuery(r.name) }}
-                className="w-full text-left px-4 py-3 hover:bg-[var(--bg)] transition-colors"
-              >
-                <p className="text-sm font-medium">{r.name}</p>
-                <p className="text-xs" style={{ color: 'var(--sub)' }}>
-                  {r.category} · {r.address}
-                </p>
-              </button>
-            </li>
+            <RestaurantSearchResult
+              key={r.naverPlaceId || r.id || i}
+              restaurant={r}
+              onSelect={(selected) => { onSelect(selected); setShowResults(false); setQuery(selected.name) }}
+            />
           ))}
         </ul>
       )}
