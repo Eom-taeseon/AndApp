@@ -49,6 +49,18 @@
 - 특수문자 포함 맛집 이름이 정상 표시됨
 - 좌표 없는 검색 결과도 안전하게 처리
 
+### [2026-03-15] ⚠️ 브랜치 전략 위반 감지
+
+**문제:**
+- `feature/restaurant-search-260315` 브랜치에서 restaurant 외 도메인 파일을 수정함
+- 영향 도메인: identity (`AuthContext.jsx`), review (`ReviewForm.jsx`), discovery (`SearchPage.jsx`, `ProfilePage.jsx`)
+- 원인: ESLint 전체 클린업 + ReviewForm Hooks 규칙 수정을 restaurant 브랜치에서 수행
+- `dev`로의 PR이 미생성 상태에서 DEVELOPMENT_SCHEDULE.md에 "✅ 완료" 표기
+
+**조치 필요:**
+- Phase 2 완료 전 타 도메인 변경 분리 검토 필요
+- `dev` PR 생성 시 리뷰어에게 cross-domain 변경 사항 명시
+
 ### [2026-03-15] ESLint 린트 클린 달성
 
 **작업 내용:**
