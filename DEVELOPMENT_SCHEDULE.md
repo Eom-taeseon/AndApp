@@ -98,8 +98,8 @@ main                              ← 프로덕션 릴리스 (태그: v1.0.0)
 
 | Phase | 브랜치 | 시작 | 종료 | 상태 |
 |---|---|---|---|---|
-| 1 | `feature/identity` | 2026-03-11 | 2026-03-14 | 🔨 진행 중 |
-| 2 | `feature/restaurant` | 2026-03-15 | 2026-03-18 | ⬜ 대기 |
+| 1 | `feature/identity` | 2026-03-11 | 2026-03-14 | ✅ 완료 |
+| 2 | `feature/restaurant` | 2026-03-15 | 2026-03-18 | ✅ 완료 |
 | 3 | `feature/review` + `feature/visualization` | 2026-03-19 | 2026-03-25 | ⬜ 대기 |
 | 4 | `feature/discovery` | 2026-03-26 | 2026-03-30 | ⬜ 대기 |
 

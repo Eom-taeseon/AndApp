@@ -44,4 +44,5 @@ main ← dev ← feature/{도메인}-{기능}-{YYMMDD}
 
 ## 현재 Phase
 
-Phase 1 — `feature/identity` (인증) 진행 중 (2026-03-11 ~ 03-14)
+Phase 2 — `feature/restaurant` (맛집 등록) 완료 (2026-03-15)
+Phase 3 — `feature/review` + `feature/visualization` 대기 (2026-03-19 ~ 03-25)
