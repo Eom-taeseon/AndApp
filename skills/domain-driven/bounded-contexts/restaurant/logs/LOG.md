@@ -39,6 +39,16 @@
 - Restaurant 컴포넌트 구조가 스펙과 일치: `RestaurantSearchInput` + `RestaurantSearchResult`
 - React strict mode에서도 안전한 Hooks 호출 순서 보장
 
+### [2026-03-15] Phase 2 안전성 개선
+
+**작업 내용:**
+- `stripHtml()`에 `&lt;` `&gt;` `&quot;` `&#39;` 엔티티 변환 추가 (네이버 API 다양한 엔티티 대응)
+- `Location.fromNaverKatech()`에 NaN 가드 추가 (mapx/mapy 누락 시 null 반환)
+
+**결과:**
+- 특수문자 포함 맛집 이름이 정상 표시됨
+- 좌표 없는 검색 결과도 안전하게 처리
+
 ### [2026-03-15] Phase 2 버그 수정
 
 **작업 내용:**
@@ -77,4 +87,6 @@
 - [x] Supabase restaurants 테이블 확인 (이미 존재)
 - [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
 - [x] RestaurantSearchResult.jsx 별도 컴포넌트 분리
+- [x] HTML 엔티티 처리 보강 + 좌표 NaN 가드
+- [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
 - [ ] NaverMap.jsx 지도 렌더링 (선택)
