@@ -8,9 +8,9 @@ export class Location {
   }
 
   static fromNaverKatech(mapx, mapy) {
-    return new Location(
-      parseInt(mapy) / 1e7,
-      parseInt(mapx) / 1e7
-    )
+    const lat = parseInt(mapy) / 1e7
+    const lng = parseInt(mapx) / 1e7
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return new Location(null, null)
+    return new Location(lat, lng)
   }
 }

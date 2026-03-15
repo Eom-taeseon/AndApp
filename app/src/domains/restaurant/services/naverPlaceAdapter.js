@@ -24,5 +24,12 @@ function extractPlaceId(link) {
 
 function stripHtml(str) {
   if (!str) return ''
-  return str.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&')
+  return str
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .trim()
 }
