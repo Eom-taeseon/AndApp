@@ -29,11 +29,24 @@
 - Mock 모드에서는 기존 로컬 데이터로 동작
 - `restaurantRepository.js`의 upsert로 선택된 맛집 DB 저장 가능
 
+### [2026-03-15] Phase 2 버그 수정
+
+**작업 내용:**
+- `upsertRestaurant`에서 camelCase(`naverPlaceId`)→snake_case(`naver_place_id`) 필드 매핑 누락 수정
+- Mock 검색 시 대소문자 무시 처리(`toLowerCase`) 추가
+
+**원인:**
+- `naverPlaceAdapter.js`는 도메인 모델 규칙에 따라 camelCase 반환
+- `restaurantRepository.js`는 DB snake_case만 참조하여 항상 null로 중복 체크 실패
+
 ---
 
 ## 🐛 디버깅 & 오류 기록
 
-(아직 없음)
+### naverPlaceId 필드 매핑 불일치 (2026-03-15, 해결)
+- ACL 어댑터: `naverPlaceId` (camelCase) 반환
+- Repository: `restaurant.naver_place_id` (snake_case) 참조
+- 해결: 양쪽 키를 모두 확인하도록 수정
 
 ---
 
