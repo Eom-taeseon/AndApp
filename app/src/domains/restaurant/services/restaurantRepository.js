@@ -37,17 +37,20 @@ export async function getRestaurant(id) {
 }
 
 // 맛집 등록 (리뷰 작성 시 없으면 자동 생성)
+// ACL 어댑터는 camelCase(naverPlaceId), DB는 snake_case(naver_place_id) — 양쪽 모두 지원
 export async function upsertRestaurant(restaurant) {
   if (isMockMode) {
     return { ...restaurant, id: restaurant.id || `r${Date.now()}` }
   }
 
+  const naverPlaceId = restaurant.naverPlaceId || restaurant.naver_place_id || null
+
   // naver_place_id가 있으면 중복 방지
-  if (restaurant.naver_place_id) {
+  if (naverPlaceId) {
     const { data: existing } = await supabase
       .from('restaurants')
       .select('*')
-      .eq('naver_place_id', restaurant.naver_place_id)
+      .eq('naver_place_id', naverPlaceId)
       .single()
 
     if (existing) return existing
@@ -59,7 +62,7 @@ export async function upsertRestaurant(restaurant) {
       name: restaurant.name,
       address: restaurant.address,
       category: restaurant.category,
-      naver_place_id: restaurant.naver_place_id || null,
+      naver_place_id: naverPlaceId,
       lat: restaurant.lat || null,
       lng: restaurant.lng || null,
       phone: restaurant.phone || null,

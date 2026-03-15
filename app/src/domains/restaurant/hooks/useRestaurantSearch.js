@@ -28,7 +28,7 @@ export function useRestaurantSearch(query) {
         if (isMockMode) {
           const q = query.toLowerCase()
           const filtered = MOCK_RESTAURANTS.filter(r =>
-            r.name.includes(q) || r.category?.includes(q) || r.address?.includes(q)
+            r.name.toLowerCase().includes(q) || r.category?.toLowerCase().includes(q) || r.address?.toLowerCase().includes(q)
           )
           if (!cancelled) setResults(filtered)
         } else {
