@@ -49,6 +49,18 @@
 - 특수문자 포함 맛집 이름이 정상 표시됨
 - 좌표 없는 검색 결과도 안전하게 처리
 
+### [2026-03-15] ESLint 린트 클린 달성
+
+**작업 내용:**
+- `search-place.js` process global 선언 추가
+- `SearchPage.jsx` 미사용 useCallback import 제거
+- `AuthContext.jsx` react-refresh 경고 억제 (Context 패턴)
+- `RestaurantSearchInput.jsx` useEffect 내 setState 제거, onChange 핸들러로 이동
+- `ProfilePage.jsx` useEffect 내 setState 제거, 초기값 + cleanup 패턴 적용
+
+**결과:**
+- ESLint 에러 0건, 빌드 정상 통과
+
 ### [2026-03-15] Phase 2 버그 수정
 
 **작업 내용:**
@@ -88,5 +100,6 @@
 - [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
 - [x] RestaurantSearchResult.jsx 별도 컴포넌트 분리
 - [x] HTML 엔티티 처리 보강 + 좌표 NaN 가드
+- [x] ESLint 린트 클린 달성 (에러 0건)
 - [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
 - [ ] NaverMap.jsx 지도 렌더링 (선택)
