@@ -9,10 +9,16 @@ export function AuthProvider({ children }) {
 
   // ─── 앱 시작 시 세션 복원 ───
   useEffect(() => {
-    authService.getCurrentUser().then(profile => {
-      setUser(profile)
-      setLoading(false)
-    })
+    authService.getCurrentUser()
+      .then(profile => {
+        setUser(profile)
+      })
+      .catch(() => {
+        setUser(null)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
     const subscription = authService.onAuthStateChange(profile => {
       setUser(profile)
@@ -24,25 +30,33 @@ export function AuthProvider({ children }) {
   // ─── 로그인 ───
   const signIn = useCallback(async ({ email, password }) => {
     setLoading(true)
-    const result = await authService.signIn({ email, password })
-    setLoading(false)
-
-    if (result.user) {
-      setUser(result.user)
+    try {
+      const result = await authService.signIn({ email, password })
+      if (result.user) {
+        setUser(result.user)
+      }
+      return result
+    } catch {
+      return { user: null, error: '로그인 중 오류가 발생했습니다.' }
+    } finally {
+      setLoading(false)
     }
-    return result
   }, [])
 
   // ─── 회원가입 ───
   const signUp = useCallback(async ({ email, password, nickname }) => {
     setLoading(true)
-    const result = await authService.signUp({ email, password, nickname })
-    setLoading(false)
-
-    if (result.user) {
-      setUser(result.user)
+    try {
+      const result = await authService.signUp({ email, password, nickname })
+      if (result.user) {
+        setUser(result.user)
+      }
+      return result
+    } catch {
+      return { user: null, error: '회원가입 중 오류가 발생했습니다.' }
+    } finally {
+      setLoading(false)
     }
-    return result
   }, [])
 
   // ─── 로그아웃 ───

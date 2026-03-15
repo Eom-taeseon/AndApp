@@ -73,6 +73,26 @@
 **결과:**
 - ESLint 에러 0건, 빌드 정상 통과
 
+### [2026-03-15] Phase 2 통합 검증 (localhost:5173)
+
+**검증 내용:**
+- 모든 라우트(`/`, `/auth`, `/search`, `/review/new`, `/profile`) HTTP 200 정상 응답
+- `npm run build` 성공 (3.07s, index.js 729KB → gzip 218KB)
+- `npm run lint` ESLint 에러 0건
+
+**확인된 정상 동작 기능:**
+- 인증: 로그인/회원가입 폼, 데모 계정(demo@fonsle.kr), 세션 유지, ProtectedRoute
+- 맛집 검색: 디바운스 검색, Mock 5건 필터링, 자동완성 드롭다운
+- 리뷰 작성: 3단계 폼(맛집선택→6항목점수→텍스트), 커스텀 슬라이더, 실시간 레이더 프리뷰
+- 시각화: 6축 레이더 차트(Recharts), MiniRadarChart, LiveRadarPreview
+- 피드: 최신 리뷰 타임라인, 페이지네이션, ReviewCard
+- 프로필: 사용자 정보, 내 리뷰 목록, 통계, 로그아웃
+- 네비게이션: TopHeader, BottomNav(4탭), 라우팅 전체 정상
+
+**결과:**
+- Phase 1(Identity) + Phase 2(Restaurant) 기능 모두 정상 동작 확인
+- Mock 모드에서 전체 E2E 흐름 테스트 가능
+
 ### [2026-03-15] Phase 2 버그 수정
 
 **작업 내용:**
