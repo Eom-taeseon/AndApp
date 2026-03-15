@@ -8,13 +8,14 @@ export default function ProfilePage() {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [myReviews, setMyReviews] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!!user)
 
   useEffect(() => {
     if (!user) return
-    setLoading(true)
+    let cancelled = false
     getReviewsByUser(user.id)
       .then(data => {
+        if (cancelled) return
         const reviews = data.map(r => {
           const totalScore = +(
             (Number(r.score_taste) + Number(r.score_value) + Number(r.score_atmosphere) +
@@ -24,8 +25,9 @@ export default function ProfilePage() {
         })
         setMyReviews(reviews)
       })
-      .catch(err => console.error('내 리뷰 로딩 실패:', err))
-      .finally(() => setLoading(false))
+      .catch(err => { if (!cancelled) console.error('내 리뷰 로딩 실패:', err) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
   }, [user])
 
   if (!user) {

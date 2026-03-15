@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { searchRestaurants, getAllRestaurants } from '../../restaurant/services/restaurantRepository'
 import { getRestaurantAvgScores } from '../../review/services/reviewRepository'

@@ -19,11 +19,6 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  // 결과가 있으면 드롭다운 표시
-  useEffect(() => {
-    if (results.length > 0) setShowResults(true)
-  }, [results])
-
   if (selected) {
     return (
       <div className="flex items-center justify-between bg-white rounded-xl px-4 py-3"
@@ -49,7 +44,7 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
       <input
         type="text"
         value={query}
-        onChange={e => setQuery(e.target.value)}
+        onChange={e => { setQuery(e.target.value); setShowResults(true) }}
         onFocus={() => results.length > 0 && setShowResults(true)}
         placeholder="맛집 이름을 검색하세요"
         className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all
