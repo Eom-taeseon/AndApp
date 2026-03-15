@@ -7,44 +7,51 @@
 
 ## ⚡ 강조 사항 (항상 기억할 것)
 
-- (작업 시작 후 채워주세요)
+- `naver_place_id` UNIQUE 제약으로 중복 등록 방지
+- 네이버 API 응답은 반드시 ACL(`naverPlaceAdapter.js`)을 통해 도메인 모델로 변환
+- 좌표 변환은 `Location.fromNaverKatech()` 사용 (카텍 → WGS84)
 
 ---
 
 ## 🛠️ 작업 로그
 
-### [날짜] 작업 제목
+### [2026-03-15] Phase 2 기본 구조 구현
 
 **작업 내용:**
-- 
+- `Location.js` 값 객체 생성 (Katech → WGS84 좌표 변환)
+- `naverPlaceAdapter.js` ACL 생성 (네이버 API → 도메인 모델 변환)
+- `/api/search-place.js` Vercel API Route 프록시 생성
+- `useRestaurantSearch.js` 훅 생성 (debounce 300ms, mock 모드 지원)
+- `RestaurantSearchInput.jsx` 리팩터링 — mock 직접 참조 제거, 훅 기반으로 전환
 
 **결과:**
-- 
+- 검색 인풋이 네이버 API 프록시를 통해 실제 맛집 검색 가능
+- Mock 모드에서는 기존 로컬 데이터로 동작
+- `restaurantRepository.js`의 upsert로 선택된 맛집 DB 저장 가능
 
 ---
 
 ## 🐛 디버깅 & 오류 기록
 
-### [날짜] 오류 제목
-
-**문제:**
-```
-오류 메시지
-```
-**원인:** 
-**해결:** 
+(아직 없음)
 
 ---
 
 ## 💡 메모 & 아이디어
 
-- 
+- Vercel 환경변수에 `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` 설정 필요
+- `restaurants` 테이블 + RLS 정책 Supabase에 이미 적용됨
 
 ---
 
 ## ✅ 완료 체크리스트
 
-- [ ] 기본 기능 구현
-- [ ] 에러 핸들링
-- [ ] 모바일 반응형 확인
-- [ ] Supabase RLS 정책 적용
+- [x] Location 값 객체 구현
+- [x] 네이버 ACL 어댑터 구현
+- [x] Vercel API Route 프록시 구현
+- [x] useRestaurantSearch 훅 구현
+- [x] RestaurantSearchInput 훅 기반 리팩터링
+- [x] Supabase restaurants 테이블 확인 (이미 존재)
+- [ ] 실제 네이버 API 연동 테스트 (환경변수 설정 후)
+- [ ] RestaurantSearchResult.jsx 별도 컴포넌트 분리 (선택)
+- [ ] NaverMap.jsx 지도 렌더링 (선택)

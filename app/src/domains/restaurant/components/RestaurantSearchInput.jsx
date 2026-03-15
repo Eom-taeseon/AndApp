@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
-import { MOCK_RESTAURANTS } from '../../../shared/lib/mock-data'
+import { useRestaurantSearch } from '../hooks/useRestaurantSearch'
 
-// 맛집 검색 인풋 + 자동완성 (목 데이터)
 export default function RestaurantSearchInput({ selected, onSelect }) {
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState([])
   const [showResults, setShowResults] = useState(false)
   const wrapperRef = useRef(null)
+  const { results, loading, error } = useRestaurantSearch(query)
 
   // 외부 클릭 시 닫기
   useEffect(() => {
@@ -19,21 +18,10 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  // 검색 (debounce 시뮬레이션)
+  // 결과가 있으면 드롭다운 표시
   useEffect(() => {
-    if (query.trim().length < 1) {
-      setResults([])
-      return
-    }
-    const timer = setTimeout(() => {
-      const filtered = MOCK_RESTAURANTS.filter(r =>
-        r.name.includes(query) || r.category.includes(query) || r.address.includes(query)
-      )
-      setResults(filtered)
-      setShowResults(true)
-    }, 200)
-    return () => clearTimeout(timer)
-  }, [query])
+    if (results.length > 0) setShowResults(true)
+  }, [results])
 
   if (selected) {
     return (
@@ -68,12 +56,18 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
         style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
       />
 
+      {loading && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="w-4 h-4 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
       {showResults && results.length > 0 && (
         <ul className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl
-          shadow-lg overflow-hidden z-30"
+          shadow-lg overflow-hidden z-30 max-h-60 overflow-y-auto"
           style={{ border: '1px solid var(--border)' }}>
-          {results.map(r => (
-            <li key={r.id}>
+          {results.map((r, i) => (
+            <li key={r.naverPlaceId || r.id || i}>
               <button
                 type="button"
                 onClick={() => { onSelect(r); setShowResults(false); setQuery(r.name) }}
@@ -89,12 +83,12 @@ export default function RestaurantSearchInput({ selected, onSelect }) {
         </ul>
       )}
 
-      {showResults && query.trim() && results.length === 0 && (
+      {showResults && query.trim() && !loading && results.length === 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl
           shadow-lg p-4 text-center z-30"
           style={{ border: '1px solid var(--border)' }}>
           <p className="text-sm" style={{ color: 'var(--sub)' }}>
-            검색 결과가 없습니다
+            {error || '검색 결과가 없습니다'}
           </p>
         </div>
       )}
